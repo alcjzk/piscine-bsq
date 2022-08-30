@@ -6,12 +6,13 @@
 /*   By: tjaasalo <tjaasalo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/29 19:27:31 by tjaasalo          #+#    #+#             */
-/*   Updated: 2022/08/29 20:32:29 by tjaasalo         ###   ########.fr       */
+/*   Updated: 2022/08/30 16:20:41 by tjaasalo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef READ_MAP_H
 # define READ_MAP_H
+# define ROW_BUFFER_SIZE 64
 # include "main.h"
 # include <stdbool.h>
 
