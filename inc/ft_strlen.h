@@ -1,21 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_string.h                                        :+:      :+:    :+:   */
+/*   ft_strlen.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tjaasalo <tjaasalo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/31 15:42:25 by tjaasalo          #+#    #+#             */
-/*   Updated: 2022/08/31 23:25:58 by tjaasalo         ###   ########.fr       */
+/*   Created: 2022/08/23 11:31:18 by tjaasalo          #+#    #+#             */
+/*   Updated: 2022/08/23 19:37:21 by tjaasalo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_STRING_H
-# define FT_STRING_H
-# include <stdbool.h>
+#ifndef FT_STRLEN_H
+# define FT_STRLEN_H
 
-//	Returns true if the given string only contains numeric characters, false
-//	otherwise.
-bool	is_numeric(char *str);
+int	ft_strlen(char *str);
 
 #endif

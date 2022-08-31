@@ -1,21 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_string.h                                        :+:      :+:    :+:   */
+/*   ft_atoi.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tjaasalo <tjaasalo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/31 15:42:25 by tjaasalo          #+#    #+#             */
-/*   Updated: 2022/08/31 23:25:58 by tjaasalo         ###   ########.fr       */
+/*   Created: 2022/08/22 18:41:05 by tjaasalo          #+#    #+#             */
+/*   Updated: 2022/08/23 15:49:27 by tjaasalo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_STRING_H
-# define FT_STRING_H
-# include <stdbool.h>
+#ifndef FT_ATOI_H
+# define FT_ATOI_H
 
-//	Returns true if the given string only contains numeric characters, false
-//	otherwise.
-bool	is_numeric(char *str);
+// Converts an ascii string to an integer.
+int	ft_atoi(char *str);
+
+int	ft_atoi_recursive(char *str, int n);
 
 #endif

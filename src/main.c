@@ -6,7 +6,7 @@
 /*   By: tjaasalo <tjaasalo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/29 11:53:51 by tjaasalo          #+#    #+#             */
-/*   Updated: 2022/08/31 23:33:52 by tjaasalo         ###   ########.fr       */
+/*   Updated: 2022/08/31 23:39:58 by tjaasalo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@
 
 int	main(int argc, char **argv)
 {
-	handle_file(open("testing.txt", O_RDONLY));
 	if (!run(argc, argv))
 		return (1);
 	return (0);
