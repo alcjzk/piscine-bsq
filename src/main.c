@@ -54,6 +54,51 @@ int	main(int argc, char **argv)
 	return (0);
 }
 
+bool	run(int argc, char **argv)
+{
+	int			i;
+	t_map		*map;
+	t_square	*largest_square;
+
+	if (argc <= 1)
+	{
+		// Stdin
+		if (!handle_file(STDIN_FILENO))
+		{
+			printf("Map error\n"); // TODO: Replace with some putstr
+			return (1);
+		}
+	}
+	else
+	{
+		i = 1;
+		while (i < argc)
+		{
+			if (!handle_file(open(argv[i], O_RDONLY)))
+			{
+				printf("Map error\n"); // TODO: Replace with some putstr
+			}
+		}
+		return (0);
+	}
+}
+
+bool	handle_file(int fd)
+{
+	t_map		*map;
+	t_square	*largest_square;
+	if (fd < 0)
+		return (false);
+	map = read_map(map);
+	if (!map)
+		return (false);
+	largest_square = solve_map(map);
+	if (!largest_square)
+		return (false);
+	// TODO: Print largest square
+	return (true);
+}
+
 //	Moves the given x & y pointers to the next origin that has a larger
 //	distance from the previous obstacle than the given distance.
 //	Returns true if a new origin was found, false otherwise.
@@ -131,7 +176,7 @@ bool	square_from_origin(t_map *map, int x, int y, int size)
 	return (true);
 }
 
-t_square	*solve_map2(t_map *map)
+t_square	*solve_map(t_map *map)
 {
 	int	x;
 	int	y;
@@ -152,6 +197,41 @@ t_square	*solve_map2(t_map *map)
 			largest_square->size++;
 		}
 	}
+}
+
+void print_our_solution(t_map *map, t_square *solved_square ) // void fill_square(map, square)?
+{
+	int k;
+	int y;
+	
+	y = solved_square->y;
+
+	while ( y < (solved_square->y + solved_square->size) && y <= map->header->height) // 
+	{
+		
+		k = solved_square->x - solved_square->size + 1;
+		while ( k <= solved_square->x )
+		{
+			map->map[y][k] = map->header->filler;
+			k++;
+		}
+		y++;
+	}
+	print_map(map); // This call can be made outside this function
+}
+
+void print_map(t_map *map)
+{
+	int y;
+
+	y = 0;
+	while (y <= map->header->height)
+	{
+		write(1, map->map[y], map->header->width);
+		write(1, "\n", 1);
+		y++;
+	}
+	
 }
 
 // t_square	*solve_map(t_map *map, int d, int y, int x) //had to use "d" to save space for norminette but d is the number of empty spaces after previous obsticle

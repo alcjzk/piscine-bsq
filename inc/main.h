@@ -33,7 +33,7 @@ typedef struct s_square {
 	int size;
 }	t_square;
 
-t_square	*solve_map(t_map *map, int d, int y, int x);
+t_square	*solve_map(t_map *map);
 int			test_cube(t_map *main_map, int y, int x, int k);
 
 t_map	*read_fd(int fd);
