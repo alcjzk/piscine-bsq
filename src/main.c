@@ -6,7 +6,7 @@
 /*   By: tjaasalo <tjaasalo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/29 11:53:51 by tjaasalo          #+#    #+#             */
-/*   Updated: 2022/08/30 21:39:19 by tjaasalo         ###   ########.fr       */
+/*   Updated: 2022/08/31 13:31:52 by tjaasalo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,41 +197,6 @@ t_square	*solve_map(t_map *map)
 			largest_square->size++;
 		}
 	}
-}
-
-void print_our_solution(t_map *map, t_square *solved_square ) // void fill_square(map, square)?
-{
-	int k;
-	int y;
-	
-	y = solved_square->y;
-
-	while ( y < (solved_square->y + solved_square->size) && y <= map->header->height) // 
-	{
-		
-		k = solved_square->x - solved_square->size + 1;
-		while ( k <= solved_square->x )
-		{
-			map->map[y][k] = map->header->filler;
-			k++;
-		}
-		y++;
-	}
-	print_map(map); // This call can be made outside this function
-}
-
-void print_map(t_map *map)
-{
-	int y;
-
-	y = 0;
-	while (y <= map->header->height)
-	{
-		write(1, map->map[y], map->header->width);
-		write(1, "\n", 1);
-		y++;
-	}
-	
 }
 
 // t_square	*solve_map(t_map *map, int d, int y, int x) //had to use "d" to save space for norminette but d is the number of empty spaces after previous obsticle
