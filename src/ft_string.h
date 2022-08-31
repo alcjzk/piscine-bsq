@@ -1,25 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strcpy.c                                        :+:      :+:    :+:   */
+/*   ft_string.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tjaasalo <tjaasalo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/16 12:49:03 by tjaasalo          #+#    #+#             */
-/*   Updated: 2022/08/16 15:17:07 by tjaasalo         ###   ########.fr       */
+/*   Created: 2022/08/31 15:42:25 by tjaasalo          #+#    #+#             */
+/*   Updated: 2022/08/31 23:25:58 by tjaasalo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-char	*ft_strcpy(char *dest, char *src)
-{
-	int	i;
+#ifndef FT_STRING_H
+# define FT_STRING_H
+# include <stdbool.h>
 
-	i = 0;
-	while (src[i] != 0)
-	{
-		dest[i] = src[i];
-		i++;
-	}
-	dest[i] = 0;
-	return (dest);
-}
+//	Returns true if the given string only contains numeric characters, false
+//	otherwise.
+bool	is_numeric(char *str);
+
+#endif

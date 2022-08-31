@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   map.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkaratzi <mkaratzi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tjaasalo <tjaasalo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/31 13:26:52 by tjaasalo          #+#    #+#             */
-/*   Updated: 2022/08/31 13:40:38 by mkaratzi         ###   ########.fr       */
+/*   Updated: 2022/08/31 23:04:14 by tjaasalo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "map.h"
+#include <unistd.h>
 
 /*	Fills the given square into the map. */
 void	fill_square(t_map *map, t_square *square)
@@ -18,19 +19,17 @@ void	fill_square(t_map *map, t_square *square)
 	int	k;
 	int	y;
 
-	y = solved_square->y;
-	while (y < (solved_square->y + solved_square->size)
-		&& y <= map->header->height)
+	y = square->y;
+	while (y < (square->y + square->size) && y <= map->height)
 	{
-		k = solved_square->x - solved_square->size + 1;
-		while (k <= solved_square->x)
+		k = square->x - square->size + 1;
+		while (k <= square->x)
 		{
-			map->map[y][k] = map->header->filler;
+			map->map[y][k] = map->filler;
 			k++;
 		}
-	y++;
+		y++;
 	}
-	print_map(map);
 }
 
 /*	Prints the map. */
@@ -39,10 +38,9 @@ void	print_map(t_map *map)
 	int	y;
 
 	y = 0;
-	while (y <= map->header->height)
+	while (y < map->height)
 	{
-		write(1, map->map[y], map->header->width);
-		write(1, "\n", 1);
+		write(1, map->map[y], (map->width + 1));
 		y++;
 	}
 }

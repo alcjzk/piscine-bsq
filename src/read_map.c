@@ -6,146 +6,123 @@
 /*   By: tjaasalo <tjaasalo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/29 19:25:57 by tjaasalo          #+#    #+#             */
-/*   Updated: 2022/08/30 16:57:57 by tjaasalo         ###   ########.fr       */
+/*   Updated: 2022/08/31 23:29:05 by tjaasalo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// TODO: Use unsigned characters / shorts instead
-
-#include "main.h"
-#include "read_map.h"
-#include "ft_atoi.h"
+#include "map.h"
 #include <stdlib.h>
+#include "ft_atoi.h"
 #include <unistd.h>
-#include <stdio.h>
-#include "ft_strlen.h"
-#include "ft_strcpy.h"
+#include "read.h"
+#include "ft_string.h"
 
-t_map_header	*read_map_header(int fd)
+t_map	*map_header_from_buffer(char *buf, int size)
 {
-	char			buf[32]; // TODO: Actual max size for this?
+	t_map			*map;
 	int				i;
-	t_map_header	*header;
+
+	i = size - 1;
+	map = malloc(sizeof(t_map));
+	if (!map)
+		return (NULL);
+	if (size < 5)
+		return (NULL);
+	map->filler = buf[--i];
+	map->obstacle = buf[--i];
+	map->empty = buf[--i];
+	buf[i] = '\0';
+	if (!is_numeric(buf))
+		return (NULL);
+	map->height = ft_atoi(buf);
+	if (map->height <= 0)
+		return (NULL);
+	return (map);
+}
+
+//	Reads a map header from the given file descriptor.
+t_map	*read_map_header(int fd)
+{
+	char			buf[32];
+	int				i;
 	size_t			bytes_read;
 
 	i = 0;
-	header = malloc(sizeof(t_map_header));
-	header->width = 0;
-	if (!header)
-		return (NULL);
-	bytes_read = read(fd, &buf[i], 1);
-	while (bytes_read == 1)
+	bytes_read = 1;
+	while (bytes_read == 1 && i < 32)
 	{
-		if (buf[i] == '\n')
-			break;
-		bytes_read = read(fd, &buf[++i], 1);
+		bytes_read = read(fd, &buf[i], 1);
+		if (buf[i++] == '\n')
+			break ;
 	}
-	if (bytes_read != 1)
+	if (bytes_read != 1 || i >= 32)
 		return (NULL);
-	header->filler = buf[--i];
-	header->obstacle = buf[--i];
-	header->empty = buf[--i];
-	buf[i] = '\0';
-	if (!is_numeric(buf))
-	{
-		free(header);
-		return (NULL);
-	}
-	header->height = ft_atoi(buf);
-	// FIXME: Debug print
-	printf(
-		"[MAP HEADER] Obstacle: '%c', Empty: '%c', Filler: '%c', Height: '%i'\n",
-	header->obstacle,
-	header->empty,
-	header->filler,
-	header->height
-	);
-	return (header);
-}
-
-//	Returns true if the given string only contains numeric characters, false
-//	otherwise.
-bool	is_numeric(char *str)
-{
-	while (*str)
-	{
-		if (*str < '0' || *str > '9')
-			return (false);
-		str++;
-	}
-	return (true);
+	return (map_header_from_buffer(buf, i));
 }
 
 //	Reads a map row of unknown size from the given fd and sets the value in h.
-char	*read_map_row(t_map_header *header, int fd)
+char	*read_map_row(t_map *map, int fd)
 {
-	// FIXME: i out of bounds
-	char	buf[1024]; // TODO: This will hard-limit the width of the map??
-	int		i;
-	char	*row;
+	size_t	i;
 	char	*buffer;
 	size_t	bytes_read;
-	size_t	bytes_read_total;
 	size_t	buffer_size;
 
 	i = 0;
-	buffer_size = sizeof(char) * ROW_BUFFER_SIZE;
-	buffer = malloc(sizeof(char) * ROW_BUFFER_SIZE);
-	if (!buffer)
-		return (NULL);
-	bytes_read = read(fd, &buffer[i], 1);
-	bytes_read_total = bytes_read;
-	while (buf[i] != '\n' && bytes_read == 1 && bytes_read_total)
+	buffer_size = 0;
+	bytes_read = 0;
+	while (i == 0 || buffer[i - 1] != '\n')
 	{
-		bytes_read = read(fd, &buffer[++i], ROW_BUFFER_SIZE);
-		bytes_read_total += bytes_read;
+		if (i >= buffer_size)
+		{
+			buffer = ft_realloc(buffer, buffer_size, buffer_size + 512);
+			if (!buffer)
+				return (NULL);
+			buffer_size += 512;
+		}
+		bytes_read = nread_line_validate(fd, &buffer[i], buffer_size);
+		if (bytes_read <= 0)
+			return (NULL);
+		i += bytes_read;
 	}
-	if (bytes_read != 1)
-		return (NULL);
-	buf[i] = '\0';
-	header->width = bytes_read_total - 1;
-	row = malloc(bytes_read_total);
-	row = ft_strcpy(row, buffer);
-	return (row);
+	map->width = i - 1;
+	return (ft_realloc(buffer, i, i));
 }
 
 //	Reads a map row from the given fd based on a previously set rowsize.
-char	*read_map_row_exact(t_map_header *header, int fd)
+char	*read_map_row_exact(t_map *map, int fd)
 {
 	char	*row;
 	int		bytes_read;
 
-	row = malloc(header->width + 1);
+	row = malloc(map->width + 1);
 	if (!row)
 		return (NULL);
-	bytes_read = read(fd, row, (header->width + 1));
-	if (bytes_read != header->width + 1)
+	bytes_read = read(fd, row, (map->width + 1));
+	if (bytes_read != map->width + 1)
 		return (NULL);
-	row[header->width] = '\0';
+	row[map->width] = '\n';
 	return (row);
 }
 
 t_map	*read_map(int fd)
 {
-	t_map			*map;
-	char			*first_row;
-	char			*next_row;
-	int				i;
-	char			buf[1];
+	t_map	*map;
+	int		i;
 
-	i = 0;
-	map = malloc(sizeof(t_map));
+	map = read_map_header(fd);
 	if (!map)
 		return (NULL);
-	map->header = read_map_header(fd);
-	map->map = malloc(sizeof(void *) * map->header->height);
-	map->map[i] = read_map_row(map->header, fd);
+	i = 0;
+	map->map = malloc(sizeof(char *) * map->height);
+	if (!map->map)
+		return (NULL);
+	map->map[i] = read_map_row(map, fd);
 	if (!map->map[i++])
 		return (NULL);
-	while (i < map->header->height)
+	while (i < map->height)
 	{
-		printf("a\n");
-		map->map[i] = read_map_row_exact(map->header, fd);
+		map->map[i] = read_map_row_exact(map, fd);
 		if (!map->map[i++])
 			return (NULL);
 	}

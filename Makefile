@@ -1,8 +1,8 @@
 NAME = bsq
-FILES = main ft_atoi ft_strcpy ft_strlen ft_trim_start read_map map
+FILES = main ft_atoi ft_strlen ft_trim_start read map ft_string solve read_map
 OBJECTS = $(foreach F,$(FILES),obj/$(F).o)
 SRCS = $(foreach F,$(FILES),src/$(F).c)
-FLAGS = -Iinc# -Wall -Werror -Wextra 
+FLAGS = -Iinc -Wall -Werror -Wextra 
 
 OBJ = obj
 SRC = src
